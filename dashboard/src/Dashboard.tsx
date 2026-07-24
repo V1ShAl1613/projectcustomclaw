@@ -7,12 +7,9 @@ interface Claw { id: string; name: string; color: string; url: string; isRunning
 
 export default function Dashboard() {
   const [claws, setClaws] = useState<Claw[]>([]);
-  const [lastUpdated, setLastUpdated] = useState('');
-
   const fetch_ = () =>
     fetch(`${API}/api/claws`).then(r => r.json()).then(d => {
       setClaws(d);
-      setLastUpdated(new Date().toLocaleTimeString());
     }).catch(() => {});
 
   useEffect(() => {
@@ -26,9 +23,8 @@ export default function Dashboard() {
 
   return (
     <div className="page">
-      <div className="page-header">
-        <h1>Dashboard</h1>
-        <p className="page-sub">Live agent status · refreshes every 5s · last updated {lastUpdated}</p>
+      <div className="page-header" style={{ border: 'none', background: 'transparent', padding: '0 0 var(--space-4) 0', boxShadow: 'none' }}>
+        <h1 style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>YOUR AI PROGRESS</h1>
       </div>
 
       <div className="stat-row">

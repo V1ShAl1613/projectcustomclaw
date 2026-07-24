@@ -86,7 +86,7 @@ export default function Home({ onNavigate, onOpenViewer }: {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>Available Claws</h1>
+        <h1 style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>START YOUR JOURNEY</h1>
         <p className="page-sub">Select an agent to launch. First launch builds the Docker image — this can take 5–15 minutes.</p>
       </div>
 
@@ -150,7 +150,7 @@ export default function Home({ onNavigate, onOpenViewer }: {
               <div className="claw-actions">
                 {claw.isRunning ? (
                   <>
-                    <button className="btn btn-primary" style={{ background: claw.color }} onClick={() => onOpenViewer(claw.url, claw.name, claw.color)}>Open {claw.name}</button>
+                    <button className="btn btn-primary" style={{ background: claw.color }} onClick={() => window.open(claw.url, '_blank')}>Open {claw.name}</button>
                     <button className="btn btn-ghost" onClick={() => toggleLogs(claw.id)}>
                       {showLogs[claw.id] ? 'Hide Logs' : 'View Logs'}
                     </button>

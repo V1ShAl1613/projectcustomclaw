@@ -68,10 +68,11 @@ const CLAWS = {
   openclaw: {
     name: 'OpenClaw',
     dir: path.resolve(__dirname, '../openclaw'),
-    composeFile: 'docker-compose.yml',
-    containers: ['openclaw-gateway', 'openclaw-cli'],
-    url: 'http://localhost:18789',
-    description: 'OpenClaw gateway with CLI — multi-provider AI agent platform.',
+    // Override adds bridge networking + web UI service (mirrors hermes pattern)
+    composeFile: 'docker-compose.yml -f docker-compose.override.yml',
+    containers: ['openclaw-gateway', 'openclaw-ui'],
+    url: 'http://localhost:5173',
+    description: 'OpenClaw web UI — chat, sessions, settings, and multi-channel gateway.',
     color: '#f97316',
     // Tell compose to build the image locally instead of pulling 'openclaw:local'
     extraEnv: {

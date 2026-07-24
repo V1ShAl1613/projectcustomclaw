@@ -165,26 +165,26 @@
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --bg-deep: #f8f9fc;
+    --bg-deep: #fafafa;
     --bg-base: #ffffff;
-    --bg-elevated: #f0f2f8;
+    --bg-elevated: #ffffff;
     --bg-overlay: #ffffff;
-    --bg-hover: #e8ebf3;
+    --bg-hover: #f4f4f5;
 
     --surface: #ffffff;
-    --surface-strong: #f0f2f8;
-    --surface-border: #e0e4ef;
+    --surface-strong: #fafafa;
+    --surface-border: #e4e4e7;
 
-    --text-primary: #1a1d29;
-    --text-secondary: #4a4e62;
-    --text-muted: #7a7f92;
-    --text-dim: #a0a4b8;
+    --text-primary: #09090b;
+    --text-secondary: #52525b;
+    --text-muted: #71717a;
+    --text-dim: #a1a1aa;
 
-    --accent: #7c2dff;
-    --accent-hover: #8b4eff;
-    --accent-muted: rgba(124, 45, 255, 0.1);
-    --accent-subtle: rgba(124, 45, 255, 0.06);
-    --accent-glow: rgba(124, 45, 255, 0.25);
+    --accent: #09090b;
+    --accent-hover: #27272a;
+    --accent-muted: rgba(9, 9, 11, 0.05);
+    --accent-subtle: rgba(9, 9, 11, 0.02);
+    --accent-glow: rgba(9, 9, 11, 0.1);
     --accent-foreground: #ffffff;
 
     --success: #16a34a;
@@ -196,23 +196,30 @@
     --info: #2563eb;
     --info-muted: rgba(37, 99, 235, 0.1);
 
-    --border-subtle: #e8ebf3;
-    --border-default: #e0e4ef;
-    --border-strong: #c8cddc;
+    --border-subtle: #f4f4f5;
+    --border-default: #e4e4e7;
+    --border-strong: #d4d4d8;
 
     --input-bg: #ffffff;
-    --input-border: #e0e4ef;
-    --input-border-hover: #c8cddc;
+    --input-border: #e4e4e7;
+    --input-border-hover: #a1a1aa;
     --input-text: var(--text-primary);
     --input-placeholder: var(--text-dim);
 
-    --shadow-xs: 0 1px 2px rgba(15, 20, 40, 0.08);
-    --shadow-sm: 0 2px 8px rgba(15, 20, 40, 0.1);
-    --shadow-md: 0 8px 24px rgba(15, 20, 40, 0.12);
-    --shadow-lg: 0 16px 48px rgba(15, 20, 40, 0.15);
-    --shadow-xl: 0 24px 64px rgba(15, 20, 40, 0.18);
-    --shadow-glow: 0 0 32px var(--accent-glow);
-    --shadow-inner: inset 0 1px 2px rgba(15, 20, 40, 0.05);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.04);
+    --shadow-glow: 0 0 0 2px var(--accent-glow);
+    --shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 4px;
+    --radius-lg: 4px;
+    --radius-xl: 4px;
+    --radius-card: 4px;
 
     --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(15, 20, 40, 0.08);
@@ -229,26 +236,26 @@
 
 /* Force light mode */
 [data-theme="light"] {
-  --bg-deep: #f8f9fc;
+  --bg-deep: #fafafa;
   --bg-base: #ffffff;
-  --bg-elevated: #f0f2f8;
+  --bg-elevated: #ffffff;
   --bg-overlay: #ffffff;
-  --bg-hover: #e8ebf3;
+  --bg-hover: #f4f4f5;
 
   --surface: #ffffff;
-  --surface-strong: #f0f2f8;
-  --surface-border: #e0e4ef;
+  --surface-strong: #fafafa;
+  --surface-border: #e4e4e7;
 
-  --text-primary: #1a1d29;
-  --text-secondary: #4a4e62;
-  --text-muted: #7a7f92;
-  --text-dim: #a0a4b8;
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --text-dim: #a1a1aa;
 
-  --accent: #7c2dff;
-  --accent-hover: #8b4eff;
-  --accent-muted: rgba(124, 45, 255, 0.1);
-  --accent-subtle: rgba(124, 45, 255, 0.06);
-  --accent-glow: rgba(124, 45, 255, 0.25);
+  --accent: #09090b;
+  --accent-hover: #27272a;
+  --accent-muted: rgba(9, 9, 11, 0.05);
+  --accent-subtle: rgba(9, 9, 11, 0.02);
+  --accent-glow: rgba(9, 9, 11, 0.1);
   --accent-foreground: #ffffff;
 
   --success: #16a34a;
@@ -260,23 +267,30 @@
   --info: #2563eb;
   --info-muted: rgba(37, 99, 235, 0.1);
 
-  --border-subtle: #e8ebf3;
-  --border-default: #e0e4ef;
-  --border-strong: #c8cddc;
+  --border-subtle: #f4f4f5;
+  --border-default: #e4e4e7;
+  --border-strong: #d4d4d8;
 
   --input-bg: #ffffff;
-  --input-border: #e0e4ef;
-  --input-border-hover: #c8cddc;
+  --input-border: #e4e4e7;
+  --input-border-hover: #a1a1aa;
   --input-text: var(--text-primary);
   --input-placeholder: var(--text-dim);
 
-  --shadow-xs: 0 1px 2px rgba(15, 20, 40, 0.08);
-  --shadow-sm: 0 2px 8px rgba(15, 20, 40, 0.1);
-  --shadow-md: 0 8px 24px rgba(15, 20, 40, 0.12);
-  --shadow-lg: 0 16px 48px rgba(15, 20, 40, 0.15);
-  --shadow-xl: 0 24px 64px rgba(15, 20, 40, 0.18);
-  --shadow-glow: 0 0 32px var(--accent-glow);
-  --shadow-inner: inset 0 1px 2px rgba(15, 20, 40, 0.05);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 0 2px var(--accent-glow);
+  --shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-card: 4px;
 
   --glass-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(15, 20, 40, 0.08);

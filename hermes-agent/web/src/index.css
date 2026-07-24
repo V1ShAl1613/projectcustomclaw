@@ -1,222 +1,125 @@
-@import url('../../../shared-theme.css');
+@import 'tailwindcss';
+/* `fonts.css` must come BEFORE `globals.css`: as of @nous-research/ui 0.14.x,
+   `globals.css` only declares the `--font-*` CSS variables (Collapse, Rules
+   Compressed/Expanded, Mondwest). The `@font-face` registrations live in
+   `fonts.css`, so without this import the DS variables resolve to font
+   families the browser never loads and components fall back to a system
+   stack (Tabs, Segmented, Typography, Buttons, etc. all look unstyled). */
+@import '@nous-research/ui/styles/fonts.css';
+@import '@nous-research/ui/styles/globals.css';
 
-/* ============================================================================
-   HERMES AGENT WEB - SNS WORKBENCH THEME OVERRIDES
-   ============================================================================
-   This file extends the shared SNS Workbench theme with Hermes-specific
-   CSS variables consumed by @nous-research/ui (Nous DS) components.
-   ============================================================================ */
+/* Scan the published design-system bundle so its utility classes survive
+   Tailwind's JIT purge. */
+@source '../node_modules/@nous-research/ui/dist';
+
+/* ------------------------------------------------------------------ */
+/* JetBrains Mono — bundled for the embedded TUI (/chat tab).          */
+/* Gives the terminal a proper monospace font even on systems where    */
+/* the user doesn't have one installed locally; xterm.js picks it up   */
+/* via ChatPage's `fontFamily` option.                                 */
+/* Apache-2.0.                                                         */
+/* ------------------------------------------------------------------ */
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts-terminal/JetBrainsMono-Regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts-terminal/JetBrainsMono-Bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts-terminal/JetBrainsMono-Italic.woff2') format('woff2');
+}
+
+/* ------------------------------------------------------------------ */
+/* Hermes Agent — Nous DS with the LENS_0 (Hermes teal) palette applied
+   statically as the default dashboard theme. */
+/* ------------------------------------------------------------------ */
 
 :root {
-  /* ---------------------------------------------------------------------------
-     NOUS DS COMPATIBILITY TOKENS
-     Maps SNS Workbench theme to Nous Design System semantic tokens.
-     --------------------------------------------------------------------------- */
+  /* LENS_0 — from design-language/src/ui/components/overlays/index.tsx.
+     These are the defaults for the `default` (Hermes Teal) dashboard theme;
+     ThemeProvider rewrites them as inline styles when a user switches themes. */
+  --foreground: color-mix(in srgb, #ffffff 0%, transparent);
+  --foreground-base: #ffffff;
+  --foreground-alpha: 0;
+  --midground: color-mix(in srgb, #ffe6cb 100%, transparent);
+  --midground-base: #ffe6cb;
+  --midground-alpha: 1;
+  --background: color-mix(in srgb, #041c1c 100%, transparent);
+  --background-base: #041c1c;
+  --background-alpha: 1;
 
-  /* Background system */
-  --background-base: var(--bg-base);
-  --background-deep: var(--bg-deep);
-  --midground-base: var(--accent);
-  --midground: var(--accent);
-  --foreground-base: var(--text-primary);
-  --foreground: var(--text-primary);
-
-  /* Surface / Card */
-  --card-bg: var(--surface);
-  --card-border: var(--surface-border);
-
-  /* Text hierarchy */
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-text-dim: var(--text-dim);
-
-  /* Accent / Brand */
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-muted: var(--accent-muted);
-  --color-accent-glow: var(--accent-glow);
-
-  /* Semantic */
-  --color-success: var(--success);
-  --color-success-muted: var(--success-muted);
-  --color-warning: var(--warning);
-  --color-warning-muted: var(--warning-muted);
-  --color-destructive: var(--danger);
-  --color-destructive-muted: var(--danger-muted);
-  --color-info: var(--info);
-  --color-info-muted: var(--info-muted);
-
-  /* Border */
-  --color-border-subtle: var(--border-subtle);
-  --color-border: var(--border-default);
-  --color-border-strong: var(--border-strong);
-  --color-border-focus: var(--accent);
-
-  /* Input / Form */
-  --color-input-bg: var(--input-bg);
-  --color-input-border: var(--input-border);
-  --color-input-text: var(--input-text);
-  --color-input-placeholder: var(--input-placeholder);
-
-  /* Selection */
-  --color-selection-bg: var(--selection-bg);
-  --color-selection-text: var(--selection-text);
-
-  /* Shadows */
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-glow: var(--shadow-glow);
-  --shadow-inner: var(--shadow-inner);
-
-  /* Radius */
-  --radius-xs: var(--radius-xs);
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
-  --radius-full: var(--radius-full);
-
-  /* Spacing */
-  --space-1: var(--space-1);
-  --space-2: var(--space-2);
-  --space-3: var(--space-3);
-  --space-4: var(--space-4);
-  --space-5: var(--space-5);
-  --space-6: var(--space-6);
-  --space-7: var(--space-7);
-  --space-8: var(--space-8);
-
-  /* Typography */
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-display: var(--font-display);
-  --text-xs: var(--text-xs);
-  --text-sm: var(--text-sm);
-  --text-base: var(--text-base);
-  --text-lg: var(--text-lg);
-  --text-xl: var(--text-xl);
-  --text-2xl: var(--text-2xl);
-  --text-3xl: var(--text-3xl);
-  --text-4xl: var(--text-4xl);
-
-  /* Transitions */
-  --ease-out: var(--ease-out);
-  --ease-in-out: var(--ease-in-out);
-  --ease-spring: var(--ease-spring);
-  --duration-fast: var(--duration-fast);
-  --duration-normal: var(--duration-normal);
-  --duration-slow: var(--duration-slow);
-
-  /* Z-index */
-  --z-dropdown: var(--z-dropdown);
-  --z-sticky: var(--z-sticky);
-  --z-modal: var(--z-modal);
-  --z-popover: var(--z-popover);
-  --z-tooltip: var(--z-tooltip);
-  --z-toast: var(--z-toast);
-
-  /* Layout */
-  --sidebar-width: var(--sidebar-width);
-  --header-height: var(--header-height);
-  --container-max: var(--container-max);
-
-  /* Glass */
-  --glass-bg: var(--glass-bg);
-  --glass-border: var(--glass-border);
-  --glass-blur: var(--glass-blur);
-
-  /* Noise */
-  --noise-opacity: var(--noise-opacity);
-
-  /* Theme tokens consumed by Nous DS */
-  --theme-font-sans: var(--font-sans);
-  --theme-font-mono: var(--font-mono);
-  --theme-font-display: var(--font-display);
-  --theme-base-size: var(--text-base);
-  --theme-line-height: var(--leading-normal);
+  /* Typography tokens — rewritten by ThemeProvider. Defaults match the
+     system stack so themes that don't override look native. */
+  --theme-font-sans: system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --theme-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo,
+    Consolas, monospace;
+  --theme-font-display: var(--theme-font-sans);
+  --theme-base-size: 15px;
+  --theme-line-height: 1.55;
   --theme-letter-spacing: 0;
-  --theme-radius: var(--radius-md);
+
+  /* Layout tokens. */
+  --radius: 0.5rem;
+  --theme-radius: 0.5rem;
   --theme-spacing-mul: 1;
   --theme-density: comfortable;
-  --series-input-token: var(--accent);
-  --series-output-token: var(--success);
+
+  /* Data-series accents — consumed by Analytics + Models pages for the
+     input-vs-output token visualisations (chart bars, table values,
+     legend swatches). Defaults are tuned for the Hermes-teal LENS_0
+     look: cream input + emerald-400 output read as warm/cool against
+     the dark canvas. Themes override via ThemeProvider, which emits
+     these as `--series-input-token` / `--series-output-token`. */
+  --series-input-token: #ffe6cb;
+  --series-output-token: #34d399;
 }
 
-/* ---------------------------------------------------------------------------
-   OVERRIDE NOUS DS THEME DEFAULTS
-   The Nous DS uses these semantic tokens. We map our SNS Workbench
-   palette to them so all components automatically inherit the theme.
-   --------------------------------------------------------------------------- */
-
-@theme inline {
-  /* Colors - map to Tailwind v4 semantic tokens */
-  --color-background: var(--background-base);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card-bg);
-  --color-card-foreground: var(--foreground);
-  --color-popover: var(--card-bg);
-  --color-popover-foreground: var(--foreground);
-  --color-primary: var(--color-accent);
-  --color-primary-foreground: var(--bg-deep);
-  --color-secondary: var(--bg-elevated);
-  --color-secondary-foreground: var(--foreground);
-  --color-muted: var(--bg-elevated);
-  --color-muted-foreground: var(--color-text-muted);
-  --color-accent: var(--color-accent);
-  --color-accent-foreground: var(--bg-deep);
-  --color-destructive: var(--color-destructive);
-  --color-destructive-foreground: var(--color-text-primary);
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-info: var(--color-info);
-  --color-border: var(--color-border);
-  --color-input: var(--color-input-border);
-  --color-ring: var(--color-border-focus);
-
-  /* Radius */
-  --radius-sm: var(--radius-xs);
-  --radius-md: var(--radius-sm);
-  --radius-lg: var(--radius-md);
-  --radius-xl: var(--radius-lg);
-
-  /* Fonts */
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-
-  /* Animations */
-  --animate-fade-in: fade-in var(--duration-normal) var(--ease-out);
-  --animate-slide-up: slide-up var(--duration-normal) var(--ease-out);
-  --animate-slide-down: slide-down var(--duration-normal) var(--ease-out);
-  --animate-spin: spin 1s linear infinite;
-  --animate-pulse: pulse 2s ease-in-out infinite;
-}
-
-/* ============================================================================
-   GLOBAL STYLES
-   ============================================================================ */
-
+/* Theme tokens cascade into the document root so every descendant inherits
+   the font stack, base size, and letter spacing without explicit calls. */
 html {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  letter-spacing: 0;
+  font-family: var(--theme-font-sans);
+  font-size: var(--theme-base-size);
+  line-height: var(--theme-line-height);
+  letter-spacing: var(--theme-letter-spacing);
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
-  background: var(--bg-base);
-  color: var(--text-primary);
 }
 
 body {
+  font-family: var(--theme-font-sans);
   min-height: 0;
   height: 100%;
   margin: 0;
   overflow: hidden;
-  font-family: var(--font-sans);
+}
+
+code, kbd, pre, samp, .font-mono, .font-mono-ui {
+  font-family: var(--theme-font-mono);
+}
+
+/* Density: scale the shadcn spacing utilities via a multiplier. The DS
+   components use `p-N` / `gap-N` / `space-*` classes which resolve against
+   Tailwind's spacing scale; multiplying `--spacing` at :root scales them
+   all proportionally in Tailwind v4. */
+@theme inline {
+  --spacing: calc(0.25rem * var(--theme-spacing-mul, 1));
+  --font-sans: var(--theme-font-sans);
+  --font-mono: var(--theme-font-mono);
 }
 
 #root {
@@ -226,15 +129,10 @@ body {
   overflow: hidden;
 }
 
-code, kbd, pre, samp, .font-mono, .font-mono-ui {
-  font-family: var(--font-mono);
-}
-
-small { font-size: 0.875rem; }
-code { font-size: 0.875rem; }
-
 @media (max-width: 768px) {
-  html, body, #root {
+  html,
+  body,
+  #root {
     min-height: 100dvh;
     height: auto;
     max-height: none;
@@ -243,129 +141,107 @@ code { font-size: 0.875rem; }
   }
 }
 
-/* ============================================================================
-   SCROLLBAR
-   ============================================================================ */
+/* Nousnet's hermes-agent layout bumps `small` and `code` to readable
+   dashboard sizes. Keep in sync. */
+small { font-size: 1.0625rem; }
+code { font-size: 0.875rem; }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Shadcn-compat tokens.
+   The dashboard's page code predates the Nous DS and uses shadcn-style
+   utility classes (bg-card, text-muted-foreground, border-border, etc.)
+   extensively. Rather than rewrite every call site, we expose those
+   tokens on top of the Nous palette so classes continue to resolve. */
+@theme inline {
+  /* Remap foreground to midground so `text-foreground` / `bg-foreground`
+     stay visible — in LENS_0, `--foreground` itself has alpha 0. */
+  --color-foreground: var(--midground);
+
+  --color-card: color-mix(in srgb, var(--midground-base) 4%, var(--background-base));
+  --color-card-foreground: var(--midground);
+  --color-primary: var(--midground);
+  --color-primary-foreground: var(--background-base);
+  --color-secondary: color-mix(in srgb, var(--midground-base) 6%, var(--background-base));
+  --color-secondary-foreground: var(--midground);
+  --color-muted: color-mix(in srgb, var(--midground-base) 8%, var(--background-base));
+  /* Routes the shadcn `muted-foreground` slot through the DS semantic
+     text-secondary token (defaults to midground 80%) so legacy call
+     sites that use `text-muted-foreground` get a readable color
+     instead of the old 55%-transparent default. */
+  --color-muted-foreground: var(--color-text-secondary);
+  --color-accent: color-mix(in srgb, var(--midground-base) 10%, var(--background-base));
+  --color-accent-foreground: var(--midground);
+  --color-destructive: #fb2c36;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #4ade80;
+  --color-warning: #ffbd38;
+  --color-border: color-mix(in srgb, var(--midground-base) 15%, transparent);
+  --color-input: color-mix(in srgb, var(--midground-base) 15%, transparent);
+  --color-ring: var(--midground);
+  --color-popover: color-mix(in srgb, var(--midground-base) 4%, var(--background-base));
+  --color-popover-foreground: var(--midground);
+
+  --radius-sm: calc(var(--theme-radius) - 4px);
+  --radius-md: calc(var(--theme-radius) - 2px);
+  --radius-lg: var(--theme-radius);
+  --radius-xl: calc(var(--theme-radius) + 4px);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-base);
+
+/* Collapsed sidebar tooltip entrance — skipped when moving between items. */
+@keyframes sidebar-tooltip-in {
+  from { opacity: 0; transform: translateY(-50%) translateX(-4px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border-default);
-  border-radius: var(--radius-full);
-  border: 2px solid var(--bg-base);
-  background-clip: content-box;
-  transition: background var(--duration-fast);
+/* Toast animations used by `components/Toast.tsx`. */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(16px); }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-default) transparent;
-}
-
-/* ============================================================================
-   SELECTION
-   ============================================================================ */
-
-::selection {
-  background: var(--selection-bg);
-  color: var(--selection-text);
-}
-
-/* ============================================================================
-   FOCUS VISIBLE
-   ============================================================================ */
-
-:focus-visible {
-  outline: none;
-  ring: 2px solid var(--accent);
-  ring-offset: 2px;
-  ring-offset-color: var(--bg-base);
-}
-
-/* ============================================================================
-   REDUCED MOTION
-   ============================================================================ */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ============================================================================
-   KEYFRAMES (used by @theme inline above)
-   ============================================================================ */
-
+/* Generic fade + dialog entrance used by popovers and confirm dialogs. */
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-
-@keyframes slide-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* ============================================================================
-   UTILITY CLASSES
-   ============================================================================ */
-
+/* Hide scrollbar utility — used by the header's overflow-x nav row. */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
 
+/* System UI-monospace stack — distinct from `font-courier` (Courier
+   Prime), used for dense data readouts where the display font would
+   break the grid. Routes through the theme's mono stack so themes
+   with a different monospace (JetBrains Mono, IBM Plex Mono, etc.)
+   still apply here. */
 .font-mono-ui {
-  font-family: var(--font-mono);
+  font-family: var(--theme-font-mono);
 }
 
-/* Subtle grain overlay for badges */
+/* Subtle grain overlay for badges. */
 .grain {
   position: relative;
 }
-
 .grain::after {
   content: '';
   position: absolute;
   inset: 0;
   opacity: 0.12;
   pointer-events: none;
-  background: repeating-conic-gradient(currentColor 0% 25%, #0000 0% 50%) 0 0 / 2px 2px;
+  background: repeating-conic-gradient(currentColor 0% 25%, #0000 0% 50%) 0 0 /
+    2px 2px;
 }
+

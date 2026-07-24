@@ -16,6 +16,4 @@ services:
     environment:
       - HERMES_UID=${HERMES_UID:-10000}
       - HERMES_GID=${HERMES_GID:-10000}
-      - HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
-      - HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH=scrypt$$16384$$8$$1$$D09rfNxumhaxO5+SA4nAMg==$$jRdYWer8doecZP/8JNs5QO8Xcym2IRhyyR4p3YSQx/U=
     command: ["dashboard", "--host", "0.0.0.0", "--no-open"]

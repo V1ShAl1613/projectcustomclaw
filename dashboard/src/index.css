@@ -1,6 +1,11 @@
 @import url('../../shared-theme.css');
 
 /* Dashboard-specific overrides and additions */
+:root {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: var(--font-sans);
+}
+
 #root {
   height: 100vh;
   width: 100vw;
