@@ -1,0 +1,25 @@
+services:
+  cloud-desktop:
+    build:
+      context: .
+      dockerfile: Dockerfile.cloud-desktop
+    container_name: cloud-desktop
+    restart: unless-stopped
+    environment:
+      PUID: ${CLOUD_DESKTOP_PUID:-1000}
+      PGID: ${CLOUD_DESKTOP_PGID:-1000}
+      TZ: ${TZ:-UTC}
+      CUSTOM_USER: claw
+      PASSWORD: claw-desktop
+      TITLE: Cloud Desktop
+      LC_ALL: en_US.UTF-8
+    volumes:
+      - cloud-desktop-config:/config
+      - ${HOME:-/tmp}:/host-home:rw
+      - ../:/workspace:rw
+    ports:
+      - "${CLOUD_DESKTOP_PORT:-3010}:3000"
+    shm_size: "1gb"
+
+volumes:
+  cloud-desktop-config:

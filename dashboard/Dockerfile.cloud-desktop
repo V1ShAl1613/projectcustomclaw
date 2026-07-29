@@ -1,0 +1,16 @@
+FROM lscr.io/linuxserver/webtop:ubuntu-xfce
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+     chromium \
+     firefox \
+     file-roller \
+     wmctrl \
+     thunar \
+     curl \
+     git \
+     jq \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY cloud-desktop-init.sh /etc/cont-init.d/50-cloud-desktop
+RUN chmod +x /etc/cont-init.d/50-cloud-desktop

@@ -5,12 +5,14 @@ import Dashboard from './Dashboard';
 import Settings from './Settings';
 import Viewer from './Viewer';
 import Chat from './Chat';
+import Desktop from './Desktop';
 
-export type Page = 'home' | 'chat' | 'dashboard' | 'settings' | 'viewer';
+export type Page = 'desktop' | 'home' | 'chat' | 'dashboard' | 'settings' | 'viewer';
 
 interface ViewerState { url: string; title: string; color: string; }
 
 const NAV = [
+  { id: 'desktop' as Page, label: 'Desktop', icon: '🖥️' },
   { id: 'chat' as Page, label: 'Chat', icon: '💬' },
   { id: 'home' as Page, label: 'Claws', icon: '🦀' },
   { id: 'dashboard' as Page, label: 'Dashboard', icon: '📊' },
@@ -18,7 +20,7 @@ const NAV = [
 ];
 
 export default function App() {
-  const [page, setPage] = useState<Page>('chat');
+  const [page, setPage] = useState<Page>('desktop');
   const [viewer, setViewer] = useState<ViewerState | null>(null);
 
   const openViewer = (url: string, title: string, color: string) => {
@@ -54,9 +56,10 @@ export default function App() {
           <div className="sidebar-footer">v1.0.0</div>
         </aside>
       )}
-      <main className={page === 'viewer' || page === 'chat' ? 'main-content main-content--full' : 'main-content'}>
+      <main className={page === 'viewer' || page === 'chat' || page === 'desktop' ? 'main-content main-content--full' : 'main-content'}>
+        {page === 'desktop' && <Desktop onNavigate={setPage} onOpenViewer={openViewer} />}
         {page === 'chat' && <Chat />}
-        {page === 'home' && <Home onNavigate={setPage} onOpenViewer={openViewer} />}
+        {page === 'home' && <Home onNavigate={setPage} />}
         {page === 'dashboard' && <Dashboard />}
         {page === 'settings' && <Settings />}
         {page === 'viewer' && viewer && (

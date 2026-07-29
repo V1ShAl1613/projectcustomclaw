@@ -9,9 +9,8 @@ interface Claw {
   url: string; isRunning: boolean; containers: Container[];
 }
 
-export default function Home({ onNavigate, onOpenViewer }: {
+export default function Home({ onNavigate }: {
   onNavigate: (p: Page) => void;
-  onOpenViewer: (url: string, title: string, color: string) => void;
 }) {
   const [claws, setClaws] = useState<Claw[]>([]);
   const [apiOk, setApiOk] = useState(true);

@@ -16,6 +16,12 @@ const OPENCLAW_FIELDS: Field[] = [
   { key: 'GEMINI_API_KEY', label: 'Gemini API Key', placeholder: 'AIza…', type: 'password' },
 ];
 
+const CLOUD_FIELDS: Field[] = [
+  { key: 'CLOUD_DESKTOP_PORT', label: 'Desktop Port', placeholder: '3010' },
+  { key: 'CLOUD_DESKTOP_PUID', label: 'Desktop UID', placeholder: '1000' },
+  { key: 'CLOUD_DESKTOP_PGID', label: 'Desktop GID', placeholder: '1000' },
+];
+
 function Section({ title, color, fields }: { title: string; color: string; fields: Field[] }) {
   const [vals, setVals] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
@@ -68,6 +74,7 @@ export default function Settings() {
       </div>
       <Section title="Hermes Agent" color="#aa3bff" fields={HERMES_FIELDS} />
       <Section title="OpenClaw" color="#f97316" fields={OPENCLAW_FIELDS} />
+      <Section title="Cloud Desktop" color="#22c55e" fields={CLOUD_FIELDS} />
     </div>
   );
 }

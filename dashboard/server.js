@@ -1,12 +1,13 @@
 import express from 'express';
 import { exec, execSync, spawnSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readdirSync, statSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.use(express.json());
+const WORKSPACE_ROOT = path.resolve(__dirname, '..');
 
 app.use((_, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -50,6 +51,19 @@ function buildEnv(extra = {}) {
 
 // ── Claw definitions ───────────────────────────────────────────────────────
 const CLAWS = {
+  cloudDesktop: {
+    name: 'Cloud Desktop',
+    dir: path.resolve(__dirname),
+    composeFile: 'docker-compose.yml',
+    containers: ['cloud-desktop'],
+    url: 'http://localhost:3010',
+    description: 'Browser-based Linux desktop with terminal, browser, file manager, and workspace tools.',
+    color: '#22c55e',
+    extraEnv: {
+      CLOUD_DESKTOP_PUID: String(process.getuid()),
+      CLOUD_DESKTOP_PGID: String(process.getgid()),
+    },
+  },
   hermes: {
     name: 'Hermes Agent',
     dir: path.resolve(__dirname, '../hermes-agent'),
@@ -162,6 +176,51 @@ app.get('/api/logs/:id', (req, res) => {
 
 // ── Health check ───────────────────────────────────────────────────────────
 app.get('/api/health', (_, res) => res.json({ ok: true, dockerHost: DOCKER_HOST }));
+
+app.get('/api/fs', (req, res) => {
+  const target = typeof req.query.path === 'string' && req.query.path.trim() ? req.query.path : WORKSPACE_ROOT;
+  const resolved = path.resolve(target);
+  if (!resolved.startsWith(WORKSPACE_ROOT)) {
+    return res.status(403).json({ error: 'Path escapes workspace root' });
+  }
+  try {
+    const entries = readdirSync(resolved, { withFileTypes: true }).map((entry) => {
+      const full = path.join(resolved, entry.name);
+      const stat = statSync(full);
+      return {
+        name: entry.name,
+        path: full,
+        type: entry.isDirectory() ? 'dir' : 'file',
+        size: stat.size,
+        modified: stat.mtimeMs,
+      };
+    });
+    res.json({ path: resolved, entries });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/terminal', (req, res) => {
+  const command = typeof req.body?.command === 'string' ? req.body.command.trim() : '';
+  const cwd = typeof req.body?.cwd === 'string' && req.body.cwd.trim() ? path.resolve(req.body.cwd) : WORKSPACE_ROOT;
+  if (!command) {
+    return res.status(400).json({ error: 'Command is required' });
+  }
+  if (!cwd.startsWith(WORKSPACE_ROOT)) {
+    return res.status(403).json({ error: 'cwd escapes workspace root' });
+  }
+
+  exec(command, { cwd, env: buildEnv(), timeout: 20000, maxBuffer: 1024 * 1024 }, (err, stdout, stderr) => {
+    res.json({
+      exitCode: err && typeof err.code === 'number' ? err.code : 0,
+      output: (stdout || stderr || '').toString(),
+      command,
+      cwd,
+      error: err ? String(err.message || err) : '',
+    });
+  });
+});
 
 app.listen(3001, () => {
   console.log('API server → http://localhost:3001');
