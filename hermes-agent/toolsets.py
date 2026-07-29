@@ -196,6 +196,105 @@ TOOLSETS = {
         "tools": ["read_file", "write_file", "patch", "search_files"],
         "includes": []
     },
+
+    "filesystem_advanced": {
+        "description": "Advanced filesystem operations: read/write/edit/rename/move/copy/delete, search, watch, binary handling, archives, checksums, indexing",
+        "tools": [
+            "read_file_advanced", "write_file_advanced", "edit_file",
+            "rename_file", "move_file", "copy_file", "delete_file",
+            "search_files_advanced", "watch_files", "handle_binary_file",
+            "extract_archive", "create_archive", "generate_checksum",
+            "index_workspace",
+        ],
+        "includes": []
+    },
+
+    "git": {
+        "description": "Git operations: clone, analyze, commit, branch, merge, conflicts, diff, review, release, stats, PR prep, changelog",
+        "tools": [
+            "git_clone", "git_analyze", "git_commit", "git_branch",
+            "git_merge", "git_conflict_explain", "git_diff", "git_code_review",
+            "git_release", "git_stats", "git_pr_prepare", "git_changelog",
+        ],
+        "includes": []
+    },
+
+    "documentation": {
+        "description": "Documentation generation: README, architecture, API docs, sequence/class diagrams, Mermaid diagrams, project summaries, dependency reports",
+        "tools": [
+            "generate_readme", "generate_architecture_docs", "generate_api_docs",
+            "generate_sequence_diagram", "generate_class_diagram", "generate_mermaid_diagram",
+            "generate_project_summary", "generate_dependency_report",
+        ],
+        "includes": []
+    },
+
+    "testing": {
+        "description": "Testing tools: pytest, cargo test, go test, jest, vitest, flutter test, JUnit, coverage, benchmarks",
+        "tools": [
+            "run_pytest", "run_cargo_test", "run_go_test", "run_jest",
+            "run_vitest", "run_flutter_test", "run_junit", "generate_coverage_report",
+            "run_benchmarks", "detect_test_frameworks",
+        ],
+        "includes": []
+    },
+
+    "language_support": {
+        "description": "Language-specific analysis and formatting: Rust, Python, TypeScript, Go, Java, Kotlin, Swift, C#, C++, Dart/Flutter",
+        "tools": [
+            "rust_analyze", "rust_fmt",
+            "python_analyze", "python_format",
+            "typescript_analyze", "typescript_format",
+            "go_analyze", "go_format",
+            "java_analyze",
+            "kotlin_analyze", "kotlin_format",
+            "swift_analyze", "swift_format",
+            "csharp_analyze", "csharp_format",
+            "cpp_analyze", "cpp_format",
+            "dart_analyze", "dart_format",
+            "detect_languages", "analyze_all",
+        ],
+        "includes": []
+    },
+
+    "code_intelligence": {
+        "description": "Code intelligence: indexing, dependency graph, call graph, architecture, symbol search, reference search, dead code, unused deps, quality scoring, tech debt",
+        "tools": [
+            "index_repository", "dependency_graph", "call_graph", "architecture_graph",
+            "symbol_search", "reference_search", "dead_code_detection",
+            "unused_dependency_detection", "code_quality_score", "technical_debt_estimation",
+        ],
+        "includes": []
+    },
+
+    "ai_providers": {
+        "description": "Multi-provider AI chat: OpenAI, Anthropic, Gemini, Ollama, vLLM, LM Studio, OpenRouter, LiteLLM",
+        "tools": [
+            "ai_chat", "ai_chat_with_tools", "list_providers", "test_provider",
+        ],
+        "includes": []
+    },
+
+    "ai_enhanced": {
+        "description": "Advanced AI capabilities: planning, reflection, retry, context compression, memory, semantic search, RAG",
+        "tools": [
+            "ai_plan", "ai_execute_plan", "ai_reflect", "ai_retry_with_reflection",
+            "compress_context", "conversation_memory", "project_memory",
+            "semantic_search", "rag_query",
+        ],
+        "includes": []
+    },
+
+    "docker": {
+        "description": "Docker operations: build, run, inspect, logs, compose, network, volume, cleanup, monitor, health, restart, stop, remove, stats",
+        "tools": [
+            "docker_build", "docker_run", "docker_inspect", "docker_logs",
+            "docker_compose", "docker_network", "docker_volume", "docker_cleanup",
+            "docker_monitor", "docker_health", "docker_restart", "docker_stop",
+            "docker_remove", "docker_stats", "docker_ps", "docker_images",
+        ],
+        "includes": []
+    },
     
     "tts": {
         "description": "Text-to-speech: convert text to audio with Edge TTS (free), ElevenLabs, OpenAI, or xAI",
@@ -300,6 +399,179 @@ TOOLSETS = {
             "yb_send_dm",
             "yb_search_sticker",
             "yb_send_sticker",
+        ],
+        "includes": []
+    },
+
+    # Phase 1: Core Extensions
+    "terminal_advanced": {
+        "description": "Advanced terminal session management: persistent sessions, environment profiles, streaming, background jobs, process monitoring, timeout management",
+        "tools": [
+            "shell_session_create", "shell_session_execute", "shell_session_history",
+            "shell_session_env", "shell_session_close", "shell_session_list",
+            "shell_stream_output", "shell_cancel", "shell_background_job",
+            "shell_process_monitor", "shell_timeout_manager",
+        ],
+        "includes": []
+    },
+
+    "git": {
+        "description": "Git operations: clone, analyze, commit, branch, merge, conflicts, diff, review, release, stats, PR prep, changelog",
+        "tools": [
+            "git_clone", "git_analyze", "git_commit", "git_branch",
+            "git_merge", "git_conflict_explain", "git_diff", "git_code_review",
+            "git_release", "git_stats", "git_pr_prepare", "git_changelog",
+        ],
+        "includes": []
+    },
+
+    # Phase 2: Automation & Intelligence
+    "playwright": {
+        "description": "Playwright browser automation: launch, navigate, screenshot, PDF, DOM extraction, accessibility, scraping, login, forms, intercept, trace, visual regression",
+        "tools": [
+            "playwright_launch", "playwright_navigate", "playwright_screenshot",
+            "playwright_pdf", "playwright_dom_extract", "playwright_accessibility",
+            "playwright_scrape", "playwright_login", "playwright_form",
+            "playwright_intercept", "playwright_trace", "playwright_visual_regression",
+            "playwright_close",
+        ],
+        "includes": []
+    },
+
+    "documentation": {
+        "description": "Documentation generation: README, architecture, API docs, sequence/class diagrams, Mermaid diagrams, project summaries, dependency reports",
+        "tools": [
+            "generate_readme", "generate_architecture_docs", "generate_api_docs",
+            "generate_sequence_diagram", "generate_class_diagram", "generate_mermaid_diagram",
+            "generate_project_summary", "generate_dependency_report",
+        ],
+        "includes": []
+    },
+
+    "testing": {
+        "description": "Testing tools: pytest, cargo test, go test, jest, vitest, flutter test, JUnit, coverage, benchmarks",
+        "tools": [
+            "run_pytest", "run_cargo_test", "run_go_test", "run_jest",
+            "run_vitest", "run_flutter_test", "run_junit", "generate_coverage_report",
+            "run_benchmarks", "detect_test_frameworks",
+        ],
+        "includes": []
+    },
+
+    "language_support": {
+        "description": "Language-specific analysis and formatting: Rust, Python, TypeScript, Go, Java, Kotlin, Swift, C#, C++, Dart/Flutter",
+        "tools": [
+            "rust_analyze", "rust_fmt",
+            "python_analyze", "python_format",
+            "typescript_analyze", "typescript_format",
+            "go_analyze", "go_format",
+            "java_analyze",
+            "kotlin_analyze", "kotlin_format",
+            "swift_analyze", "swift_format",
+            "csharp_analyze", "csharp_format",
+            "cpp_analyze", "cpp_format",
+            "dart_analyze", "dart_format",
+            "detect_languages", "analyze_all",
+        ],
+        "includes": []
+    },
+
+    # Phase 3: AI & Analysis
+    "code_intelligence": {
+        "description": "Code intelligence: indexing, dependency graph, call graph, architecture, symbol search, reference search, dead code, unused deps, quality scoring, tech debt",
+        "tools": [
+            "index_repository", "dependency_graph", "call_graph", "architecture_graph",
+            "symbol_search", "reference_search", "dead_code_detection",
+            "unused_dependency_detection", "code_quality_score", "technical_debt_estimation",
+        ],
+        "includes": []
+    },
+
+    "ai_providers": {
+        "description": "Multi-provider AI chat: OpenAI, Anthropic, Gemini, Ollama, vLLM, LM Studio, OpenRouter, LiteLLM",
+        "tools": [
+            "ai_chat", "ai_chat_with_tools", "list_providers", "test_provider",
+        ],
+        "includes": []
+    },
+
+    "ai_enhanced": {
+        "description": "Advanced AI capabilities: planning, reflection, retry, context compression, memory, semantic search, RAG",
+        "tools": [
+            "ai_plan", "ai_execute_plan", "ai_reflect", "ai_retry_with_reflection",
+            "compress_context", "conversation_memory", "project_memory",
+            "semantic_search", "rag_query",
+        ],
+        "includes": []
+    },
+
+    "security": {
+        "description": "Security analysis: vulnerability scanning, secret detection, static analysis, misconfig detection, license compliance, SBOM generation, security reports",
+        "tools": [
+            "scan_vulnerabilities", "detect_secrets", "static_analysis",
+            "detect_misconfig", "check_license", "generate_sbom", "generate_security_report",
+        ],
+        "includes": []
+    },
+
+    "database": {
+        "description": "Database operations: query (PostgreSQL, MySQL, SQLite, MongoDB, Redis), schema, migrations, backup, restore",
+        "tools": [
+            "db_query", "db_schema", "db_migrate", "db_backup", "db_restore",
+        ],
+        "includes": []
+    },
+
+    # Phase 4: Operations & Extensibility
+    "logging_enhanced": {
+        "description": "Enhanced logging: structured, JSON, colored, worker logs, tool execution audit trail",
+        "tools": [
+            "structured_log", "json_log", "colored_log", "worker_logs", "tool_execution_logs",
+        ],
+        "includes": []
+    },
+
+    "monitoring": {
+        "description": "System and container monitoring: CPU, RAM, Disk, GPU, Network, container metrics, realtime dashboard",
+        "tools": [
+            "system_metrics", "container_metrics", "process_metrics",
+            "health_check", "metrics_history", "realtime_dashboard",
+        ],
+        "includes": []
+    },
+
+    "search_enhanced": {
+        "description": "Enhanced search: semantic/vector search, workspace-wide, regex, dependency search, documentation search, code search",
+        "tools": [
+            "semantic_search", "workspace_search", "regex_search",
+            "dependency_search", "doc_search", "code_search",
+        ],
+        "includes": []
+    },
+
+    "plugins": {
+        "description": "Plugin system: load/unload plugins, list plugins, register tools from plugins",
+        "tools": [
+            "plugin_load", "plugin_unload", "plugin_list", "plugin_register_tool",
+            "auto_load_plugins", "plugin_info", "plugin_config",
+        ],
+        "includes": []
+    },
+
+    "mcp": {
+        "description": "MCP integration: connect to MCP servers, list/call MCP tools, pre-configured for GitHub, GitLab, Slack, Discord, Notion, Jira, Linear, Figma, Google Drive, Gmail, Databricks, Snowflake, Salesforce, ServiceNow, cloud providers",
+        "tools": [
+            "mcp_connect", "mcp_list_tools", "mcp_call_tool",
+        ],
+        "includes": []
+    },
+
+    "performance": {
+        "description": "Performance optimizations: parallel execution, tool scheduling, memory optimization, container startup, caching, profiling, resource quotas",
+        "tools": [
+            "parallel_execute", "tool_scheduler", "memory_optimize",
+            "container_startup_optimize", "cache_manage", "profile_tool",
+            "async_batch", "resource_quota",
         ],
         "includes": []
     },
