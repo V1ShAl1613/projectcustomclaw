@@ -103,6 +103,28 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
     fetchClaws();
   };
 
+  const openClaw = async (id: string) => {
+    let claw = claws.find((c) => c.id === id);
+    let targetUrl = claw?.url || (id === 'hermes' ? 'http://localhost:5173' : 'http://localhost:9119');
+
+    if (!claw?.isRunning) {
+      setLaunching(true);
+      try {
+        const res = await fetch(`${API}/api/launch/${id}`, { method: 'POST' });
+        const data = await res.json();
+        if (data?.url) targetUrl = data.url;
+        await fetchClaws();
+      } catch (err) {
+        console.error(`Failed to launch ${id}:`, err);
+      } finally {
+        setLaunching(false);
+      }
+    }
+
+    window.open(targetUrl, '_blank');
+    onOpenViewer(targetUrl, claw?.name || (id === 'hermes' ? 'Hermes' : 'OpenClaw'), claw?.color || '#aa3bff');
+  };
+
   const updateWindow = (id: string, patch: Partial<WindowState>) => {
     setWindows((current) => current.map((win) => (win.id === id ? { ...win, ...patch } : win)));
   };
@@ -147,12 +169,12 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
                 <span className="launch-tile-label">Open VM</span>
                 <span className="launch-tile-meta">Cloud desktop</span>
               </button>
-              <button className="launch-tile" onClick={() => onOpenViewer('http://localhost:9119', 'Hermes', '#aa3bff')}>
+              <button className="launch-tile" onClick={() => openClaw('hermes')}>
                 <span className="launch-tile-icon">🧠</span>
                 <span className="launch-tile-label">Hermes</span>
                 <span className="launch-tile-meta">Full control access</span>
               </button>
-              <button className="launch-tile" onClick={() => onOpenViewer('http://localhost:18789', 'OpenClaw', '#f97316')}>
+              <button className="launch-tile" onClick={() => openClaw('openclaw')}>
                 <span className="launch-tile-icon">🦞</span>
                 <span className="launch-tile-label">OpenClaw</span>
                 <span className="launch-tile-meta">Gateway + UI</span>
@@ -210,8 +232,8 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
             <input className="start-search" value={browserUrl} onChange={(e) => setBrowserUrl(e.target.value)} placeholder="Search or type a URL" />
             <div className="start-pinned">
               <button className="start-pin start-pin--accent" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>VM</button>
-              <button className="start-pin" onClick={() => onOpenViewer('http://localhost:9119', 'Hermes', '#aa3bff')}>Hermes</button>
-              <button className="start-pin" onClick={() => onOpenViewer('http://localhost:18789', 'OpenClaw', '#f97316')}>OpenClaw</button>
+              <button className="start-pin" onClick={() => openClaw('hermes')}>Hermes</button>
+              <button className="start-pin" onClick={() => openClaw('openclaw')}>OpenClaw</button>
               <button className="start-pin" onClick={() => setWindows((wins) => [...wins.slice(1), wins[0]])}>Terminal</button>
               <button className="start-pin" onClick={() => setWindows((wins) => [wins[2], ...wins.slice(0, 2)])}>Browser</button>
             </div>
@@ -226,8 +248,8 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
               </div>
               <div className="overview-actions">
                 <button className="btn btn-primary" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>Open VM</button>
-                <button className="btn btn-ghost" onClick={() => onOpenViewer('http://localhost:9119', 'Hermes', '#aa3bff')}>Hermes</button>
-                <button className="btn btn-ghost" onClick={() => onOpenViewer('http://localhost:18789', 'OpenClaw', '#f97316')}>OpenClaw</button>
+                <button className="btn btn-ghost" onClick={() => openClaw('hermes')}>Hermes</button>
+                <button className="btn btn-ghost" onClick={() => openClaw('openclaw')}>OpenClaw</button>
               </div>
             </div>
             <div className="overview-card">
@@ -329,8 +351,8 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
         <button className={`dock-item ${windowClasses.has('terminal') ? 'live' : ''}`} onClick={() => setWindows((wins) => [wins[1], wins[0], wins[2]])}>Terminal</button>
         <button className={`dock-item ${windowClasses.has('browser') ? 'live' : ''}`} onClick={() => setWindows((wins) => [wins[2], ...wins.slice(0, 2)])}>Browser</button>
         <button className="dock-item live" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>VM</button>
-        <button className="dock-item" onClick={() => onOpenViewer('http://localhost:9119', 'Hermes', '#aa3bff')}>Hermes</button>
-        <button className="dock-item" onClick={() => onOpenViewer('http://localhost:18789', 'OpenClaw', '#f97316')}>OpenClaw</button>
+        <button className="dock-item" onClick={() => openClaw('hermes')}>Hermes</button>
+        <button className="dock-item" onClick={() => openClaw('openclaw')}>OpenClaw</button>
       </footer>
     </div>
   );

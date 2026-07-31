@@ -8,6 +8,9 @@ window that asked and never steals focus for a background session.
 """
 
 import json
+import os
+import shutil
+import subprocess
 import re
 
 from tools import desktop_ui
@@ -47,7 +50,53 @@ def open_preview_tool(url: str, label: str = "") -> str:
     except Exception as exc:
         return tool_error(f"Failed to open the preview pane: {exc}")
     if not ok:
-        return tool_error("The preview pane is only available in the Hermes desktop app.")
+        # Fall back to the local GUI if we are running in a graphical shell
+        # outside the Hermes desktop app. This keeps folder/URL opening useful
+        # in a real desktop session instead of forcing a hard failure.
+        display = os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")
+        if not display:
+            return tool_error(
+                "The environment doesn't have a graphical display available, so I can't "
+                "open a file manager or browser here."
+            )
+
+        opener = None
+        is_url = bool(re.match(r"^[a-zA-Z][a-zA-Z\d+\-.]*://", target))
+        is_file = target.startswith(("/", "./", "../", "~", "file:"))
+        if is_url:
+            if shutil.which("chromium"):
+                opener = ["chromium", "--new-window", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", target]
+            elif shutil.which("chromium-browser"):
+                opener = ["chromium-browser", "--new-window", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", target]
+            elif shutil.which("firefox"):
+                opener = ["firefox", "--new-window", target]
+            elif shutil.which("xdg-open"):
+                opener = ["xdg-open", target]
+            elif shutil.which("gio"):
+                opener = ["gio", "open", target]
+        elif is_file:
+            if shutil.which("thunar"):
+                opener = ["thunar", target]
+            elif shutil.which("xdg-open"):
+                opener = ["xdg-open", target]
+            elif shutil.which("gio"):
+                opener = ["gio", "open", target]
+
+        if opener:
+            env = os.environ.copy()
+            try:
+                subprocess.Popen(opener, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                return json.dumps(
+                    {"success": True, "url": target, "label": label, "mode": "system-open"},
+                    ensure_ascii=False,
+                )
+            except Exception as exc:
+                return tool_error(f"Failed to open {target!r} with the system GUI: {exc}")
+
+        return tool_error(
+            "The preview pane is only available in the Hermes desktop app, and no GUI opener "
+            "was found on this host."
+        )
 
     return json.dumps({"success": True, "url": target, "label": label}, ensure_ascii=False)
 

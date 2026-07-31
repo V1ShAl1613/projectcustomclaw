@@ -48,6 +48,7 @@ import subprocess
 import sys
 import threading
 import uuid
+import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from tools.computer_use.backend import (
@@ -1552,6 +1553,7 @@ class CuaDriverBackend(ComputerUseBackend):
         # element. Cleared whenever a fresh capture overwrites the
         # snapshot context.
         self._snapshot_tokens: Dict[int, str] = {}
+        self._xvfb_proc: Optional[subprocess.Popen] = None
         # Per-instance cua-driver session id. cua-driver's MCP server
         # instructions ask every consumer to declare a stable session
         # at the start of a run (start_session) and tear it down at
@@ -1574,6 +1576,7 @@ class CuaDriverBackend(ComputerUseBackend):
     # ── Lifecycle ──────────────────────────────────────────────────
     def start(self) -> None:
         _maybe_nudge_update()
+        self._ensure_display()
         # The MCP client SDK (`mcp`) is an optional dependency (the
         # `computer-use` / `mcp` extras), not part of Hermes' minimal core.
         # Lazy-install it on first use — the same pattern every other optional
@@ -1625,6 +1628,41 @@ class CuaDriverBackend(ComputerUseBackend):
                 except Exception as e:
                     logger.debug("cua-driver set_agent_cursor_enabled failed: %s", e)
 
+    def _ensure_display(self) -> None:
+        """Start a private Xvfb display on headless Linux when needed.
+
+        Hermes' computer-use backend needs a live desktop session. In a
+        headless Linux runtime we can still provide one by spawning Xvfb and
+        pointing DISPLAY at it, which lets cua-driver bind to a real X11
+        server instead of failing the backend start entirely.
+        """
+        if sys.platform != "linux":
+            return
+        if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
+            return
+        if shutil.which("Xvfb") is None:
+            logger.debug("No DISPLAY and Xvfb unavailable; computer_use will remain headless")
+            return
+        display = os.environ.get("HERMES_COMPUTER_USE_DISPLAY", ":99")
+        cmd = ["Xvfb", display, "-screen", "0", "1920x1080x24", "-nolisten", "tcp"]
+        try:
+            self._xvfb_proc = subprocess.Popen(
+                cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                stdin=subprocess.DEVNULL,
+            )
+            time.sleep(0.5)
+            if self._xvfb_proc.poll() is not None:
+                logger.debug("Xvfb exited immediately; computer_use remains headless")
+                self._xvfb_proc = None
+                return
+            os.environ["DISPLAY"] = display
+            os.environ.pop("WAYLAND_DISPLAY", None)
+            logger.info("Started private Xvfb display %s for computer_use", display)
+        except Exception as exc:
+            logger.debug("Failed to start Xvfb for computer_use: %s", exc)
+
     def stop(self) -> None:
         # Tear the cua-driver session down before disconnecting so the
         # driver can clean up per-session state (cursor overlay, recording
@@ -1640,6 +1678,16 @@ class CuaDriverBackend(ComputerUseBackend):
             self._session.stop()
         finally:
             self._bridge.stop()
+            if self._xvfb_proc is not None:
+                try:
+                    self._xvfb_proc.terminate()
+                    self._xvfb_proc.wait(timeout=3)
+                except Exception:
+                    try:
+                        self._xvfb_proc.kill()
+                    except Exception:
+                        pass
+                self._xvfb_proc = None
 
     def is_available(self) -> bool:
         # cua-driver runs on macOS, Windows, and Linux. The Linux path is
@@ -2796,4 +2844,3 @@ class CuaDriverBackend(ComputerUseBackend):
             meta.update(structured)
         return _action_result_from(name, ok, message, meta, structured,
                                    requested_delivery=args.get("delivery_mode"))
-

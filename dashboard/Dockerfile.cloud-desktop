@@ -1,16 +1,84 @@
 FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-     chromium \
-     firefox \
-     file-roller \
-     wmctrl \
-     thunar \
-     curl \
-     git \
-     jq \
-  && rm -rf /var/lib/apt/lists/*
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN set -eux; \
+  ARCH="$(dpkg --print-architecture)"; \
+  mkdir -p /etc/apt/keyrings; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    sudo \
+    ca-certificates \
+    curl \
+    wget \
+    gnupg \
+    software-properties-common \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    cmake \
+    pkg-config \
+    python3 \
+    python3-pip \
+    python3-venv \
+    python3-dev \
+    git \
+    jq \
+    tree \
+    htop \
+    procps \
+    psmisc \
+    lsof \
+    net-tools \
+    iputils-ping \
+    dnsutils \
+    iproute2 \
+    traceroute \
+    rsync \
+    unzip \
+    zip \
+    tar \
+    gzip \
+    p7zip-full \
+    nano \
+    vim \
+    tmux \
+    bash-completion \
+    chromium \
+    firefox \
+    file-roller \
+    wmctrl \
+    xvfb \
+    x11-xserver-utils \
+    xdotool \
+    thunar \
+    mousepad \
+    ristretto \
+    xfce4-terminal \
+    xfce4-taskmanager \
+    xfce4-screenshooter \
+    fonts-ubuntu \
+    fonts-dejavu \
+    fonts-liberation \
+    fonts-noto; \
+  curl -fsSL https://deb.nodesource.com/setup_22.x | bash -; \
+  apt-get install -y nodejs; \
+  curl -fsSL https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg | gpg --dearmor -o /etc/apt/keyrings/brave-browser.gpg; \
+  echo "deb [arch=${ARCH} signed-by=/etc/apt/keyrings/brave-browser.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main" > /etc/apt/sources.list.d/brave-browser.list; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends brave-browser || true; \
+  if [ "${ARCH}" = "arm64" ]; then \
+    curl -fsSL -o /tmp/code.deb "https://update.code.visualstudio.com/latest/linux-deb-arm64/stable"; \
+  else \
+    curl -fsSL -o /tmp/code.deb "https://update.code.visualstudio.com/latest/linux-deb-x64/stable"; \
+  fi; \
+  dpkg -i /tmp/code.deb || apt-get install -f -y; \
+  rm -f /tmp/code.deb; \
+  pip install --break-system-packages pyautogui playwright selenium opencv-python pillow; \
+  echo "abc ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/abc; \
+  chmod 0440 /etc/sudoers.d/abc; \
+  rm -rf /var/lib/apt/lists/*
 
 COPY cloud-desktop-init.sh /etc/cont-init.d/50-cloud-desktop
 RUN chmod +x /etc/cont-init.d/50-cloud-desktop

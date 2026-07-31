@@ -77,6 +77,8 @@ const CLAWS = {
     extraEnv: {
       HERMES_UID: String(process.getuid()),
       HERMES_GID: String(process.getgid()),
+      HERMES_YOLO_MODE: '1',
+      HERMES_UNRESTRICTED: '1',
     },
   },
   openclaw: {
@@ -112,6 +114,14 @@ function dockerPs() {
   }
 }
 
+function getHermesUrl() {
+  try {
+    const out = execSync("lsof -i :5173 -sTCP:LISTEN", { encoding: 'utf8', timeout: 1000 });
+    if (out.trim().length > 0) return 'http://localhost:5173';
+  } catch {}
+  return 'http://localhost:9119';
+}
+
 // ── Routes ─────────────────────────────────────────────────────────────────
 app.get('/api/claws', (_, res) => {
   const running = dockerPs();
@@ -120,8 +130,13 @@ app.get('/api/claws', (_, res) => {
       const found = running.find(r => r.name === c);
       return { name: c, running: !!found, status: found?.status || 'stopped', image: found?.image || '-' };
     });
-    const isRunning = activeContainers.some(c => c.running);
-    return { id, name: claw.name, description: claw.description, color: claw.color, url: claw.url, containers: activeContainers, isRunning };
+    let isRunning = activeContainers.some(c => c.running);
+    let targetUrl = claw.url;
+    if (id === 'hermes') {
+      targetUrl = getHermesUrl();
+      if (targetUrl === 'http://localhost:5173') isRunning = true;
+    }
+    return { id, name: claw.name, description: claw.description, color: claw.color, url: targetUrl, containers: activeContainers, isRunning };
   });
   res.json(result);
 });
@@ -222,7 +237,7 @@ app.post('/api/terminal', (req, res) => {
   });
 });
 
-app.listen(3001, () => {
+app.listen(3001, '0.0.0.0', () => {
   console.log('API server → http://localhost:3001');
   // Verify docker is reachable
   const check = spawnSync('docker', ['info'], { env: buildEnv(), encoding: 'utf8', timeout: 5000 });

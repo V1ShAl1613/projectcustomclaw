@@ -9,8 +9,6 @@ services:
       PUID: ${CLOUD_DESKTOP_PUID:-1000}
       PGID: ${CLOUD_DESKTOP_PGID:-1000}
       TZ: ${TZ:-UTC}
-      CUSTOM_USER: claw
-      PASSWORD: claw-desktop
       TITLE: Cloud Desktop
       LC_ALL: en_US.UTF-8
     volumes:
