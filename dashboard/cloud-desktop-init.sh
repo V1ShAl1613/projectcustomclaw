@@ -27,6 +27,58 @@ if [ -f /opt/brave.com/brave/brave-browser ]; then
   sed -i 's|"$HERE/brave" "$@"|"$HERE/brave" --no-sandbox --disable-dev-shm-usage --disable-gpu "$@"|g' /opt/brave.com/brave/brave-browser || true
 fi
 
+# Ensure nginx matches both /websocket and /websockets (Selkies client uses /websockets)
+if [ -f /etc/nginx/sites-available/default ]; then
+  sed -i 's|location /websocket {|location ~ ^/websockets? {|g' /etc/nginx/sites-available/default || true
+  nginx -t && nginx -s reload || true
+fi
+
+# Force mouse cursor visibility in the Selkies web client
+# Selkies dynamically sets cursor:none on the canvas. We inject CSS !important overrides
+# and a MutationObserver JS that reverts any cursor:none assignment back to default.
+if [ -f /usr/share/selkies/web/index.html ]; then
+  python3 << 'PYEOF'
+html_path = "/usr/share/selkies/web/index.html"
+with open(html_path, "r") as f:
+    html = f.read()
+
+css = "<style>*,canvas,#app,#root,body,html,.video-container{cursor:default!important}</style>"
+js = """<script>
+(function(){
+  setInterval(function(){
+    var c=document.querySelectorAll("canvas");
+    for(var i=0;i<c.length;i++){
+      if(c[i].style.cursor==="none"||c[i].style.cursor==="")
+        c[i].style.setProperty("cursor","default","important");
+    }
+  },200);
+  function startObs(){
+    new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        if(m.type==="attributes"&&m.attributeName==="style"){
+          var el=m.target;
+          if(el.style&&el.style.cursor==="none")
+            el.style.setProperty("cursor","default","important");
+        }
+      });
+    }).observe(document.body,{attributes:true,attributeFilter:["style"],subtree:true});
+  }
+  if(document.body)startObs();
+  else document.addEventListener("DOMContentLoaded",startObs);
+})();
+</script>"""
+
+if "</head>" in html and css not in html:
+    html = html.replace("</head>", css + "</head>")
+if "</body>" in html and "MutationObserver" not in html:
+    html = html.replace("</body>", js + "</body>")
+
+with open(html_path, "w") as f:
+    f.write(html)
+print("Cursor fix applied to Selkies web client")
+PYEOF
+fi
+
 cat > "$AUTOSTART_DIR/desktop-appearance.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
