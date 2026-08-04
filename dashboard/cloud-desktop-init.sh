@@ -40,7 +40,7 @@ cat > /home/abc/Desktop/Hermes.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Hermes Agent
-Exec=chromium --no-sandbox --app=http://host.docker.internal:9119
+Exec=google-chrome --no-sandbox --app=http://host.docker.internal:9119
 Icon=utilities-terminal
 Terminal=false
 EOF
@@ -49,17 +49,17 @@ cat > /home/abc/Desktop/OpenClaw.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=OpenClaw
-Exec=chromium --no-sandbox http://host.docker.internal:5173
+Exec=google-chrome --no-sandbox http://host.docker.internal:5173
 Icon=internet-web-browser
 Terminal=false
 EOF
 
-cat > /home/abc/Desktop/Chromium.desktop <<EOF
+cat > /home/abc/Desktop/Chrome.desktop <<EOF
 [Desktop Entry]
 Type=Application
-Name=Chromium Browser
-Exec=chromium --no-sandbox
-Icon=chromium
+Name=Google Chrome
+Exec=google-chrome --no-sandbox
+Icon=google-chrome
 Terminal=false
 EOF
 
