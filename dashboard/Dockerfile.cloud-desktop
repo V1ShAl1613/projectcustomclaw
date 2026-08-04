@@ -15,11 +15,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libasound2 libgbm1 libnspr4 libnss3 xdg-utils libxkbfile1 libsecret-1-0 libxss1 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && \
-    add-apt-repository ppa:xtradeb/apps -y && \
-    apt-get update && apt-get install -y chromium chromium-driver xdg-user-dirs && \
-    mkdir -p /etc/chromium.d && echo 'export CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --no-sandbox --disable-dev-shm-usage --use-gl=angle --use-angle=swiftshader --ignore-gpu-blocklist"' > /etc/chromium.d/99-disable-sandbox && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common xdg-user-dirs wget && \
+    ARCH="$(dpkg --print-architecture)" && \
+    wget -q -O google-chrome.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_${ARCH}.deb" && \
+    apt-get install -y ./google-chrome.deb && \
+    rm google-chrome.deb && \
+    rm -rf /var/lib/apt/lists/* && \
+    mv /usr/bin/google-chrome /usr/bin/google-chrome-orig && \
+    echo '#!/bin/bash\nexec /usr/bin/google-chrome-orig --no-sandbox --disable-dev-shm-usage "$@"' > /usr/bin/google-chrome && \
+    chmod +x /usr/bin/google-chrome
 
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
