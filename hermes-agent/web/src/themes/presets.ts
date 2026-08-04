@@ -35,23 +35,113 @@ const DEFAULT_LAYOUT: ThemeLayout = {
 };
 
 // ---------------------------------------------------------------------------
-// Themes
+// SNS Workbench theme (matches shared-theme.css exactly)
 // ---------------------------------------------------------------------------
+
+export const snsWorkbenchTheme: DashboardTheme = {
+  name: "sns-workbench",
+  label: "Claw Dashboard",
+  description: "Light professional theme — matching the main Claw dashboard",
+  palette: {
+    background: { hex: "#ffffff", alpha: 1 },
+    midground: { hex: "#09090b", alpha: 1 },
+    foreground: { hex: "#09090b", alpha: 1 },
+    warmGlow: "rgba(9, 9, 11, 0.1)",
+    noiseOpacity: 0,
+  },
+  typography: {
+    fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    fontMono: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace",
+    fontDisplay: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    baseSize: "14px",
+    lineHeight: "1.5",
+    letterSpacing: "0",
+  },
+  layout: {
+    radius: "4px",
+    density: "comfortable",
+  },
+  terminalBackground: "#0a0c12",
+  terminalForeground: "#f0f1f5",
+  colorOverrides: {
+    card: "#ffffff",
+    cardForeground: "#09090b",
+    popover: "#ffffff",
+    popoverForeground: "#09090b",
+    primary: "#09090b",
+    primaryForeground: "#ffffff",
+    secondary: "#f4f4f5",
+    secondaryForeground: "#09090b",
+    muted: "#f4f4f5",
+    mutedForeground: "#71717a",
+    accent: "#09090b",
+    accentForeground: "#ffffff",
+    destructive: "#dc2626",
+    destructiveForeground: "#ffffff",
+    success: "#16a34a",
+    warning: "#ea580c",
+    border: "#e4e4e7",
+    input: "#e4e4e7",
+    ring: "#09090b",
+  },
+  seriesColors: {
+    inputTokenAccent: "#09090b",
+    outputTokenAccent: "#16a34a",
+  },
+  swatchColors: ["#ffffff", "#09090b", "#e4e4e7"],
+};
 
 export const defaultTheme: DashboardTheme = {
   name: "default",
-  label: "Hermes Teal",
-  description: "Classic dark teal — the canonical Hermes look",
+  label: "Claw Dashboard",
+  description: "Light professional theme — matching the main Claw dashboard",
   palette: {
-    background: { hex: "#041c1c", alpha: 1 },
-    midground: { hex: "#ffe6cb", alpha: 1 },
-    foreground: { hex: "#ffffff", alpha: 0 },
-    warmGlow: "rgba(255, 189, 56, 0.35)",
-    noiseOpacity: 1,
+    background: { hex: "#ffffff", alpha: 1 },
+    midground: { hex: "#09090b", alpha: 1 },
+    foreground: { hex: "#09090b", alpha: 1 },
+    warmGlow: "rgba(9, 9, 11, 0.1)",
+    noiseOpacity: 0,
   },
-  typography: DEFAULT_TYPOGRAPHY,
-  layout: DEFAULT_LAYOUT,
-  terminalBackground: "#000000",
+  typography: {
+    fontSans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    fontMono: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace",
+    fontDisplay: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    baseSize: "14px",
+    lineHeight: "1.5",
+    letterSpacing: "0",
+  },
+  layout: {
+    radius: "4px",
+    density: "comfortable",
+  },
+  terminalBackground: "#0a0c12",
+  terminalForeground: "#f0f1f5",
+  colorOverrides: {
+    card: "#ffffff",
+    cardForeground: "#09090b",
+    popover: "#ffffff",
+    popoverForeground: "#09090b",
+    primary: "#09090b",
+    primaryForeground: "#ffffff",
+    secondary: "#f4f4f5",
+    secondaryForeground: "#09090b",
+    muted: "#f4f4f5",
+    mutedForeground: "#71717a",
+    accent: "#09090b",
+    accentForeground: "#ffffff",
+    destructive: "#dc2626",
+    destructiveForeground: "#ffffff",
+    success: "#16a34a",
+    warning: "#ea580c",
+    border: "#e4e4e7",
+    input: "#e4e4e7",
+    ring: "#09090b",
+  },
+  seriesColors: {
+    inputTokenAccent: "#09090b",
+    outputTokenAccent: "#16a34a",
+  },
+  swatchColors: ["#ffffff", "#09090b", "#e4e4e7"],
 };
 
 export const midnightTheme: DashboardTheme = {
@@ -229,6 +319,7 @@ export const defaultLargeTheme: DashboardTheme = {
 };
 
 export const BUILTIN_THEMES: Record<string, DashboardTheme> = {
+  "sns-workbench": snsWorkbenchTheme,
   default: defaultTheme,
   "default-large": defaultLargeTheme,
   "nous-blue": nousBlueTheme,

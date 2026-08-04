@@ -18,7 +18,7 @@ export default function Viewer({ url, title, color, onBack }: ViewerProps) {
         className="viewer-frame"
         src={url}
         title={title}
-        allow="clipboard-read; clipboard-write"
+        allow="clipboard-read; clipboard-write; fullscreen; pointer-lock"
       />
     </div>
   );

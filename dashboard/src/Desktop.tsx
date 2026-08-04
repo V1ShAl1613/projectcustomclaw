@@ -57,8 +57,8 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [command, setCommand] = useState('pwd');
   const [output, setOutput] = useState('Ready.');
-  const [browserUrl, setBrowserUrl] = useState('http://localhost:3010');
-  const [browserCurrentUrl, setBrowserCurrentUrl] = useState('http://localhost:3010');
+  const [browserUrl, setBrowserUrl] = useState('http://localhost:3010/?autoconnect=true&resize=remote');
+  const [browserCurrentUrl, setBrowserCurrentUrl] = useState('http://localhost:3010/?autoconnect=true&resize=remote');
   const [claws, setClaws] = useState<Claw[]>([]);
   const [selectedClaw, setSelectedClaw] = useState<string>('hermes');
   const [launching, setLaunching] = useState(false);
@@ -152,7 +152,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
           <div className="desktop-title">Full VM access for Hermes + OpenClaw</div>
         </div>
         <div className="desktop-topbar-actions">
-          <button className="btn btn-ghost" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>Open VM</button>
+          <button className="btn btn-ghost" onClick={() => onOpenViewer('http://localhost:3010/?autoconnect=true&resize=remote', 'Cloud Desktop', '#22c55e')}>Open VM</button>
           <button className="btn btn-ghost" onClick={() => onNavigate('home')}>Claws</button>
           <button className="btn btn-ghost" onClick={() => onNavigate('dashboard')}>Status</button>
           <button className="btn btn-primary" onClick={() => onNavigate('chat')}>Chat</button>
@@ -164,7 +164,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
           <div className="panel-card">
             <div className="panel-title">Main Launchpad</div>
             <div className="launch-grid">
-              <button className="launch-tile launch-tile--primary" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>
+              <button className="launch-tile launch-tile--primary" onClick={() => onOpenViewer('http://localhost:3010/?autoconnect=true&resize=remote', 'Cloud Desktop', '#22c55e')}>
                 <span className="launch-tile-icon">🖥️</span>
                 <span className="launch-tile-label">Open VM</span>
                 <span className="launch-tile-meta">Cloud desktop</span>
@@ -231,7 +231,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
             <button className="start-button" onClick={() => setWindows((wins) => [wins[0], ...wins.slice(1)])}>Start</button>
             <input className="start-search" value={browserUrl} onChange={(e) => setBrowserUrl(e.target.value)} placeholder="Search or type a URL" />
             <div className="start-pinned">
-              <button className="start-pin start-pin--accent" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>VM</button>
+              <button className="start-pin start-pin--accent" onClick={() => onOpenViewer('http://localhost:3010/?autoconnect=true&resize=remote', 'Cloud Desktop', '#22c55e')}>VM</button>
               <button className="start-pin" onClick={() => openClaw('hermes')}>Hermes</button>
               <button className="start-pin" onClick={() => openClaw('openclaw')}>OpenClaw</button>
               <button className="start-pin" onClick={() => setWindows((wins) => [...wins.slice(1), wins[0]])}>Terminal</button>
@@ -247,7 +247,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
                 Everything points at the shared workspace mounted into Docker.
               </div>
               <div className="overview-actions">
-                <button className="btn btn-primary" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>Open VM</button>
+                <button className="btn btn-primary" onClick={() => onOpenViewer('http://localhost:3010/?autoconnect=true&resize=remote', 'Cloud Desktop', '#22c55e')}>Open VM</button>
                 <button className="btn btn-ghost" onClick={() => openClaw('hermes')}>Hermes</button>
                 <button className="btn btn-ghost" onClick={() => openClaw('openclaw')}>OpenClaw</button>
               </div>
@@ -333,7 +333,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
                     className="browser-frame"
                     src={browserCurrentUrl}
                     title="Browser preview"
-                    allow="clipboard-read; clipboard-write; fullscreen"
+                    allow="clipboard-read; clipboard-write; fullscreen; pointer-lock"
                     referrerPolicy="no-referrer"
                   />
                   <div className="browser-hint">
@@ -350,7 +350,7 @@ export default function Desktop({ onNavigate, onOpenViewer }: {
         <button className={`dock-item ${windowClasses.has('files') ? 'live' : ''}`} onClick={() => setWindows((wins) => [wins[0], ...wins.slice(1)])}>Files</button>
         <button className={`dock-item ${windowClasses.has('terminal') ? 'live' : ''}`} onClick={() => setWindows((wins) => [wins[1], wins[0], wins[2]])}>Terminal</button>
         <button className={`dock-item ${windowClasses.has('browser') ? 'live' : ''}`} onClick={() => setWindows((wins) => [wins[2], ...wins.slice(0, 2)])}>Browser</button>
-        <button className="dock-item live" onClick={() => onOpenViewer('http://localhost:3010', 'Cloud Desktop', '#22c55e')}>VM</button>
+        <button className="dock-item live" onClick={() => onOpenViewer('http://localhost:3010/?autoconnect=true&resize=remote', 'Cloud Desktop', '#22c55e')}>VM</button>
         <button className="dock-item" onClick={() => openClaw('hermes')}>Hermes</button>
         <button className="dock-item" onClick={() => openClaw('openclaw')}>OpenClaw</button>
       </footer>
